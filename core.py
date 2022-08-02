@@ -12,10 +12,17 @@ class Sequential: #links many FeedForwards into a completely connected ANN
     def __init__(self, weightsArr):
         self.weightsArr = weightsArr
         
-    def call(self, inlayer):
+    def call(self, inlayer, training=False):
+        ret = []
         for i in range(len(self.weightsArr)):
+            ret.append(inlayer)
             inlayer = self.weightsArr[i].call(inlayer)
-        return inlayer
+        ret.append(inlayer)
+
+        if(training):
+            return inlayer
+        else:
+            return ret
 
 #chain rule: dy/dx = dy/du * du/dx
 #y is loss, x is weight -> u is 
@@ -37,7 +44,7 @@ class Loss: #includes both gradient and loss function
 
 class AutoGrad:
     def __init__(self, loss):
-        self.loss = loss #class Loss type (sorry for confusion)
+        self.loss = loss #class Loss type (sorry for potential confusion)
     
     def getGrad(self, model):
         pass
