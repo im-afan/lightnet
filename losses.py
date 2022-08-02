@@ -6,12 +6,8 @@ class MSE(core.Loss):
         def meanSquaredError(y, yhat):
             return 1/2 * (np.mean(y-yhat))**2
 
-        def meanSquaredErrorGrad(y, yhat):
-            n = len(y)
-            grad = []
-            for i in range(n):
-                grad.append((y[i]-yhat[i])/n)
-
-            return np.array(grad)
+        def meanSquaredErrorGrad(y, yhat, i): #only for 1d output for now
+            n = y.size
+            return 1/n * (y[i]-yhat[i])
 
         super(MSE, self).__init__(meanSquaredError, meanSquaredErrorGrad)

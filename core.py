@@ -1,12 +1,17 @@
 import numpy as np
 
+class Activation:
+    def __init__(self, func, grad):
+        self.func = func
+        self.grad = grad
+
 class FeedForward: #two completely connected layers; can be thought of as a nn with 0 hidden layers
     def __init__(self, weights, activation):
         self.weights = weights #output layer shape is determined by weights
-        self.activation = activation
+        self.activation = activation #class activation
 
     def call(self, inlayer):
-        return self.activation(inlayer * self.weights)
+        return self.activation.func(inlayer @ self.weights)
         
 class Sequential: #links many FeedForwards into a completely connected ANN
     def __init__(self, weightsArr):
@@ -19,17 +24,10 @@ class Sequential: #links many FeedForwards into a completely connected ANN
             inlayer = self.weightsArr[i].call(inlayer)
         ret.append(inlayer)
 
-        if(training):
+        if(not training):
             return inlayer
         else:
             return ret
-
-#chain rule: dy/dx = dy/du * du/dx
-#y is loss, x is weight -> u is 
-
-#backprop step for a hidden layer of distance one from output layer: dC/dw = dC/da2 * da2/dw = dC/da2 * do(a1w)/a1w * da1w/dw
-#= dC/da2 * da2/dw * d[o(x)]/dx * a1
-#only one nn call needed for backprop
 
 class Loss: #includes both gradient and loss function
     def __init__(self, loss, grad):
