@@ -1,4 +1,5 @@
 import numpy as np
+import core
 from math import exp
 
 class Relu(core.Activation):
@@ -16,7 +17,7 @@ class Sigmoid(core.Activation):
     def __init__(self):
         def sigmoidScalar(x):
             return 1/(1+exp(-x))
-        def sigmoidScalarGrad(x)
+        def sigmoidScalarGrad(x):
             return 1/(1+exp(-x)) * (1-(1/(1+exp(-x))))
 
         super(Sigmoid, self).__init__(np.vectorize(sigmoidScalar), np.vectorize(sigmoidScalarGrad))
@@ -30,6 +31,8 @@ class Linear(core.Activation):
 
         super(Linear, self).__init__(np.vectorize(linearScalar), np.vectorize(linearScalarGrad))
 
+"""
 relu = np.vectorize(reluScalar)
 sigmoid = np.vectorize(reluScalar)
 linear = np.vectorize(linearScalar)
+"""

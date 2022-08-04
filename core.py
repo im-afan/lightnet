@@ -11,7 +11,7 @@ class FeedForward: #two completely connected layers; can be thought of as a nn w
         self.activation = activation #class activation
 
     def call(self, inlayer):
-        return self.activation.func(inlayer @ self.weights)
+            return self.activation.func(inlayer @ self.weights), inlayer @ self.weights
         
 class Sequential: #links many FeedForwards into a completely connected ANN
     def __init__(self, weightsArr):
@@ -19,15 +19,19 @@ class Sequential: #links many FeedForwards into a completely connected ANN
         
     def call(self, inlayer, training=False):
         ret = []
+        ret_noactivation = []
+        noactivation = np.copy(inlayer)
         for i in range(len(self.weightsArr)):
             ret.append(inlayer)
-            inlayer = self.weightsArr[i].call(inlayer)
+            ret_noactivation.append(noactivation)
+            inlayer, noactivation = self.weightsArr[i].call(inlayer)
         ret.append(inlayer)
+        ret_noactivation.append(noactivation)
 
         if(not training):
             return inlayer
         else:
-            return ret
+            return ret, ret_noactivation
 
 class Loss: #includes both gradient and loss function
     def __init__(self, loss, grad):
@@ -37,8 +41,8 @@ class Loss: #includes both gradient and loss function
     def getLoss(self, model, x, y): #x = logit, y = label
         return self.loss(model.call(x), y)
 
-    def getGrad(self, x):
-        return self.grad(x)
+    def getGrad(self, y, yhat, i):
+        return self.grad(y, yhat, i)
 
 class AutoGrad:
     def __init__(self, loss):

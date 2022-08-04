@@ -1,5 +1,6 @@
 #gradient calculators
 import core
+import numpy as np
 
 #chain rule: dy/dx = dy/du * du/dx
 #y is loss, x is weight -> u is 
@@ -13,10 +14,29 @@ class SchotasticGrad(core.AutoGrad):
     def __init__(self, loss):
         super(SchotasticGrad, self).__init__(loss)
 
-    def getGrad(self, model, x, y):
-        out = model.call(x, training=True)
-        
-        
+    #def getWeightGrad(self, out, y, layer, i, j):
+        #deriv = self.loss.getGrad(out[0], y[0], 0) 
+        #for i in range(layer-1):
 
+
+    def getGrad(self, model, x, y):
+        out, out_noactivation = model.call(x, training=True)
         
-            
+        #loss = self.loss.loss(out, y)
+        weightProd = 1
+
+        grad = [np.zeros(model.weightsArr[i].weights.shape) for i in range(len(model.weightsArr))]
+
+        for i in range(len(model.weightsArr)-1, -1, -1):
+            temp = 0
+            for ind in np.ndindex(model.weightsArr[i].weights.shape):
+                if(i == len(model.weightsArr)-1):
+                    dw = 1
+                    print("output: ", out[-1][0], " expected: ", y[0])
+                    dw *= self.loss.grad(out[-1], y, ind[1])
+                    #print(model.weightsArr[i].weights, out[i])
+                    dw *= model.weightsArr[i].activation.grad((out_noactivation[i+1])) #TODO: add pre-activation feature for sequential api
+                    dw *= out[i][ind[0]]
+                    grad[i][ind[0]][ind[1]] = dw
+
+        return grad

@@ -1,18 +1,38 @@
+#trains a neural network to find the average of two numbers
+
 import core
 import losses
 import activations
 import grads
 import numpy as np
 
-weight1 = core.FeedForward(np.ones((1,2)), lambda x: x)
-weight2 = core.FeedForward(np.ones((2,1)), lambda x: x)
+act = core.Activation(lambda x: x, lambda x: 1)
 
-model = core.Sequential([weight1, weight2])
+weight1 = core.FeedForward(np.random.uniform(size=(2, 1)), act) 
 
-#sgd = grads.SchotasticGrad(losses.MSE)
+model = core.Sequential([weight1])
 
-out = model.call(np.array([1]), training=True)
+sgd = grads.SchotasticGrad(losses.MSE())
+
+out = model.call(np.array([1, 1]), training=True)
 
 for layer in out:
     print(layer)
 
+
+mse = losses.MSE()
+#sgd = grads.SchotasticGrad(mse)
+lr = 0.01
+
+for i in range(1000):
+    a = np.random.uniform()
+    b = np.random.uniform()
+
+    gradients = sgd.getGrad(model, np.array([a, b]), np.array([(a+b)/2])) 
+    
+    for j in range(len(gradients)):
+        model.weightsArr[j].weights -= lr*gradients[j]
+
+    print("input: ", a, b)
+    print("loss: ", mse.getLoss(model, np.array([a, b]), np.array([(a+b)/2])))
+    #print(sgd.getGrad(model, np.array([a, b]), np.array([a+b])))
