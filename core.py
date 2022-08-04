@@ -6,25 +6,27 @@ class Activation:
         self.grad = grad
 
 class FeedForward: #two completely connected layers; can be thought of as a nn with 0 hidden layers
-    def __init__(self, weights, activation):
+    def __init__(self, weights, biases, activation): #TODO: add more customization (for flatten layers, etc.)
         self.weights = weights #output layer shape is determined by weights
+        self.biases = biases
         self.activation = activation #class activation
 
     def call(self, inlayer):
-            return self.activation.func(inlayer @ self.weights), inlayer @ self.weights
+            return self.activation.func(inlayer @ self.weights + self.biases), inlayer @ self.weights + self.biases
+            #return self.activation.func(inlayer @ self.weights), inlayer @ self.weights
         
 class Sequential: #links many FeedForwards into a completely connected ANN
-    def __init__(self, weightsArr):
-        self.weightsArr = weightsArr
+    def __init__(self, varsArr):
+        self.varsArr = varsArr #weights, biases, that kind of stuff
         
     def call(self, inlayer, training=False):
         ret = []
         ret_noactivation = []
         noactivation = np.copy(inlayer)
-        for i in range(len(self.weightsArr)):
+        for i in range(len(self.varsArr)):
             ret.append(inlayer)
             ret_noactivation.append(noactivation)
-            inlayer, noactivation = self.weightsArr[i].call(inlayer)
+            inlayer, noactivation = self.varsArr[i].call(inlayer)
         ret.append(inlayer)
         ret_noactivation.append(noactivation)
 

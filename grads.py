@@ -25,18 +25,19 @@ class SchotasticGrad(core.AutoGrad):
         #loss = self.loss.loss(out, y)
         weightProd = 1
 
-        grad = [np.zeros(model.weightsArr[i].weights.shape) for i in range(len(model.weightsArr))]
+        grad_weights = [np.zeros(model.varsArr[i].weights.shape) for i in range(len(model.varsArr))]
+        grad_biases = []
 
-        for i in range(len(model.weightsArr)-1, -1, -1):
+        for i in range(len(model.varsArr)-1, -1, -1):
             temp = 0
-            for ind in np.ndindex(model.weightsArr[i].weights.shape):
-                if(i == len(model.weightsArr)-1):
+            for ind in np.ndindex(model.varsArr[i].weights.shape):
+                if(i == len(model.varsArr)-1):
                     dw = 1
                     print("output: ", out[-1][0], " expected: ", y[0])
                     dw *= self.loss.grad(out[-1], y, ind[1])
-                    #print(model.weightsArr[i].weights, out[i])
-                    dw *= model.weightsArr[i].activation.grad((out_noactivation[i+1])) #TODO: add pre-activation feature for sequential api
+                    #print(model.varsArr[i].weights, out[i])
+                    dw *= model.varsArr[i].activation.grad((out_noactivation[i+1])) #TODO: add pre-activation feature for sequential api
                     dw *= out[i][ind[0]]
-                    grad[i][ind[0]][ind[1]] = dw
+                    grad_weights[i][ind[0]][ind[1]] = dw
 
-        return grad
+        return grad_weights

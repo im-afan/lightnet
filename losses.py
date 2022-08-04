@@ -11,3 +11,7 @@ class MSE(core.Loss):
             return 1/n * (y[i]-yhat[i])
 
         super(MSE, self).__init__(meanSquaredError, meanSquaredErrorGrad)
+
+
+
+        
