@@ -5,6 +5,8 @@ class Activation:
         self.func = func
         self.grad = grad
 
+#i shouldj probably rename this to dense lmao
+#TODO: more flexibility for feedforward (not just weights/bias structure) for more hi-tech stuff
 class FeedForward: #two completely connected layers; can be thought of as a nn with 0 hidden layers
     def __init__(self, weights, biases, activation): #TODO: add more customization (for flatten layers, etc.)
         self.weights = weights #output layer shape is determined by weights
@@ -18,7 +20,8 @@ class FeedForward: #two completely connected layers; can be thought of as a nn w
 class Sequential: #links many FeedForwards into a completely connected ANN
     def __init__(self, varsArr):
         self.varsArr = varsArr #weights, biases, that kind of stuff
-        
+        self.trainableArr = [False for i in range(len(varsArr))]
+
     def call(self, inlayer, training=False):
         ret = []
         ret_noactivation = []

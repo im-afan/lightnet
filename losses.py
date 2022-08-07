@@ -1,4 +1,4 @@
-import core
+from lightnet import core
 import numpy as np
 
 class MSE(core.Loss):
@@ -8,6 +8,7 @@ class MSE(core.Loss):
 
         def meanSquaredErrorGrad(y, yhat, i): #only for 1d output for now
             n = y.size
+            #print(y, yhat, i)
             return 1/n * (y[i]-yhat[i])
 
         super(MSE, self).__init__(meanSquaredError, meanSquaredErrorGrad)

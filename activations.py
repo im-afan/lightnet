@@ -1,5 +1,5 @@
 import numpy as np
-import core
+from lightnet import core
 from math import exp
 
 class Relu(core.Activation):
