@@ -1,4 +1,4 @@
-# nnPy
+# lightnet
 lightweight neural network library for python
 
 
