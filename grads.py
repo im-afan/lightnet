@@ -32,8 +32,8 @@ class SchotasticGrad(core.AutoGrad):
             temp = 0
             #print("i: ", i)
             mult = 0 #multiply to memo
-            if(not model.trainableArr[i]):
-                continue
+            #if(not model.trainableArr[i]):
+            #    continue
             for ind in np.ndindex(model.varsArr[i].weights.shape):
                 #print(ind[0], ind[1])
                 if(i == len(model.varsArr)-1):
@@ -44,7 +44,7 @@ class SchotasticGrad(core.AutoGrad):
                     dw *= out[i][ind[0]]
                     grad_weights[i][ind[0]][ind[1]] = dw
                 else:
-                    print("memo: ", memo)
+                    #print("memo: ", memo)
                     add = model.varsArr[i].activation.grad((out_noactivation[i+1][ind[1]]))
                     add *= model.varsArr[i].weights[ind[0]][ind[1]]
                     dw = 1
