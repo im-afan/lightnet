@@ -1,6 +1,6 @@
 import numpy as np
 from lightnet import core
-from math import exp
+from math import exp, tanh
 
 class Relu(core.Activation):
     def __init__(self):
@@ -31,6 +31,14 @@ class Linear(core.Activation):
 
         super(Linear, self).__init__(np.vectorize(linearScalar), np.vectorize(linearScalarGrad))
 
+class Tanh(core.Activation):
+    def __init__(self):
+        def tanhScalar(x):
+            return tanh(x)
+        def tanhScalarGrad(x):
+            return 1-tanh(x)**2
+        
+        super(Tanh, self).__init__(np.vectorize(tanhScalar), np.vectorize(tanhScalarGrad))
 """
 relu = np.vectorize(reluScalar)
 sigmoid = np.vectorize(reluScalar)
