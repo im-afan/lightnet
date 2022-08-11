@@ -4,15 +4,24 @@ from math import exp, tanh
 
 class Relu(core.Activation):
     def __init__(self):
+        """
         def reluScalar(x):
             return max(0, x)
         def reluScalarGrad(x):
+            return x > 0
+        """
+        super(Relu, self).__init__(lambda z: np.maximum(z, 0), lambda z: z > 0)
+        
+class LeakyRelu(core.Activation):
+    def __init__(self, a=0.2):
+        def leakyReluScalar(x):
+            return max(x*a, x)
+        def leakyReluScalarGrad(x):
             if(x > 0):
                 return 1
-            return 0
+            return a
+        super(LeakyRelu, self).__init__(np.vectorize(leakyReluScalar), np.vectorize(leakyReluScalarGrad))
 
-        super(Relu, self).__init__(np.vectorize(reluScalar), np.vectorize(reluScalarGrad))
-        
 class Sigmoid(core.Activation):
     def __init__(self):
         def sigmoidScalar(x):
