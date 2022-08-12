@@ -3,10 +3,10 @@ import numpy as np
 from lightnet import core, grads, activations, losses, layers
 import matplotlib.pyplot as plt
 
-weight1 = layers.Dense(np.random.uniform(size=(4, 10)), np.random.uniform(size=(10,)), activations.Tanh())
-weight2 = layers.Dense(np.random.uniform(size=(10, 10)), np.random.uniform(size=(10,)), activations.Tanh())
+weight1 = layers.Dense(np.random.uniform(size=(4, 10))-0.5, np.random.uniform(size=(10,))-0.5, activations.Relu())
+weight2 = layers.Dense(np.random.uniform(size=(10, 10))-0.5, np.random.uniform(size=(10,))-0.5, activations.Relu())
 #weight3 = core.FeedForward(np.random.uniform(size=(10, 10)), np.random.uniform(size=(10,)), activations.Tanh())
-weight4 = layers.Dense(np.random.uniform(size=(10, 3)), np.random.uniform(size=(3,)), activations.Sigmoid())
+weight4 = layers.Dense(np.random.uniform(size=(10, 3))-0.5, np.random.uniform(size=(3,))-0.5, activations.Sigmoid())
 
 np.random.seed(1)
 
@@ -42,7 +42,7 @@ for i in range(len(train_x)):
     for j in range(len(train_x[j])):
         train_x[i][j] = train_x[i][j] / max_x[j]
 
-lr = 1
+lr = 0.1
 loss = losses.MSE()
 grad = grads.SchotasticGrad(loss)
 
