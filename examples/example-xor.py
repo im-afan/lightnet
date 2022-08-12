@@ -1,18 +1,18 @@
 #ANN learns pattern for XOR
-from lightnet import core, grads, losses, activations
+from lightnet import core, grads, losses, activations, layers
 import numpy as np
 from numpy.random import uniform
 from random import randint
 import matplotlib.pyplot as plt
 
-np.random.seed(1)
+np.random.seed(0)
 
-layers = []
+#layers = []
 
 
-w1 = core.FeedForward(uniform(size=(2, 8)), uniform(size=(8,)), activations.Tanh())
+w1 = layers.Dense(uniform(size=(2, 2)), uniform(size=(2,)), activations.Tanh())
 #w3 = core.FeedForward(uniform(size=(8, 8)), uniform(size=(8,)), activations.Sigmoid())
-w2 = core.FeedForward(uniform(size=(8, 1)), uniform(size=(1,)), activations.Sigmoid())
+w2 = layers.Dense(uniform(size=(2, 1)), uniform(size=(1,)), activations.Sigmoid())
 
 
 #w1 = core.FeedForward(np.array([[20, -20], [20, -20]]), np.array([-10, 30]), activations.Sigmoid())
@@ -37,7 +37,7 @@ print(grad.getGrad(model, train_x[0], train_y[0]))
 
 losses = []
 
-for i in range(1000):
+for i in range(10000):
     #print("epoch: ", i)
     l = 0
     r = np.random.randint(0, 3)
