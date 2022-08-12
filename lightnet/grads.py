@@ -1,5 +1,5 @@
 #gradient calculators
-from lightnet import core
+from lightnet import core, layers, activations, losses
 import numpy as np
 
 #chain rule: dy/dx = dy/du * du/dx
@@ -41,8 +41,6 @@ class SchotasticGrad(core.AutoGrad):
 
             for j in range(len(memo_activations[i])):
                 grad_biases[i-1][j] = memo_activations[i][j] * model.varsArr[i-1].activation.grad(out_noactivation[i][j])
-
-        #print(grad_weights, grad_biases)
 
         return grad_weights, grad_biases
 
