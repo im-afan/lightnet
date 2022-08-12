@@ -1,3 +1,4 @@
+#TODO: add batch training
 #gradient calculators
 from lightnet import core, layers, activations, losses
 import numpy as np
@@ -28,11 +29,7 @@ class SchotasticGrad(core.AutoGrad):
                     memo_activations[i][j] = self.loss.grad(out[-1], y, j) #correct
             else:
                 for j in range(len(memo_activations[i])): #TODO; optimize this 
-                    dsum = 0
-                    for k in range(len(memo_activations[i+1])):
-                        dsum += memo_activations[i+1][k] * model.varsArr[i].activation.grad(out_noactivation[i+1][k]) * model.varsArr[i].weights[j][k]
-                    #print(dsum)
-                    memo_activations[i][j] = dsum
+                    memo_activations[i][j] = np.dot(memo_activations[i+1] * model.varsArr[i].activation.grad(out_noactivation[i+1]), model.varsArr[i].weights[j])
 
         
             for j in range(len(memo_activations[i-1])):
