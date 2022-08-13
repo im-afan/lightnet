@@ -10,9 +10,9 @@ np.random.seed(0)
 #layers = []
 
 
-w1 = layers.Dense(uniform(size=(2, 2)), uniform(size=(2,)), activations.Tanh())
+w1 = layers.Dense(uniform(size=(2, 2))-0.5, uniform(size=(2,))-0.5, activations.Relu())
 #w3 = core.FeedForward(uniform(size=(8, 8)), uniform(size=(8,)), activations.Sigmoid())
-w2 = layers.Dense(uniform(size=(2, 1)), uniform(size=(1,)), activations.Sigmoid())
+w2 = layers.Dense(uniform(size=(2, 1))-0.5, uniform(size=(1,))-0.5, activations.Sigmoid())
 
 
 #w1 = core.FeedForward(np.array([[20, -20], [20, -20]]), np.array([-10, 30]), activations.Sigmoid())
@@ -47,7 +47,7 @@ for i in range(10000):
         x = train_x[a]
         y = train_y[a]
 
-        weightGrads, biasGrads = grad.getGrad(model, x, y)
+        grads = grad.getGrad(model, x, y)
 
         l += loss.getLoss(model, x, y)
 
@@ -62,9 +62,9 @@ for i in range(10000):
             print(model.call(train_x))
             print("\n")   
         #"""
-        for k in range(len(weightGrads)):
-            model.varsArr[k].weights -= lr * weightGrads[k]
-            model.varsArr[k].biases -= lr * biasGrads[k]
+        for k in range(len(grads)):
+            model.varsArr[k].weights -= lr * grads[k][0]
+            model.varsArr[k].biases -= lr * grads[k][1]
 
     #print("loss:", l/4)
     losses.append(l)
