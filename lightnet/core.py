@@ -5,13 +5,17 @@ class Activation:
         self.func = func
         self.grad = grad
 
-#i shouldj probably rename this to dense lmao
-#TODO: more flexibility for feedforward (not just weights/bias structure) for more hi-tech stuff
-
 class FeedForward:
     def __init__(self):
         pass
+
     def call(self, inlayer):
+        pass
+
+    def backprop(self, memo, a, z): #TODO
+        pass
+
+    def apply_grads(self, grads):
         pass
 
 """
@@ -65,6 +69,7 @@ class AutoGrad:
     def getGrad(self, model):
         pass
 
+#not using this for now o7
 class TrainSession: #optimizer
     def __init__(self, model, loss, autograd):
         self.model = model
