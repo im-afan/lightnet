@@ -20,7 +20,7 @@ class LeakyRelu(core.Activation):
             if(x > 0):
                 return 1
             return a
-        super(LeakyRelu, self).__init__(np.vectorize(leakyReluScalar), np.vectorize(leakyReluScalarGrad))
+        super(LeakyRelu, self).__init__(lambda arr: np.where(arr>0, arr, arr*0.1), lambda arr: np.where(arr>0, 1, 0.1))
 
 class Sigmoid(core.Activation):
     def __init__(self):

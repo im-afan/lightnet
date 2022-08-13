@@ -18,26 +18,15 @@ class SchotasticGrad(core.AutoGrad):
     def getGrad(self, model, x, y):
         out, out_noactivation = model.call(x, training=True)
         
-        grad_weights = [np.zeros(model.varsArr[i].weights.shape) for i in range(len(model.varsArr))]
-        grad_biases = [np.zeros(model.varsArr[i].biases.shape) for i in range(len(model.varsArr))] #TODO: gradients for biases
+        param_grads = [None for i in range(len(model.varsArr))]
+        memo = np.zeros((out[-1].shape))
 
-        memo_activations = [np.zeros(out[i].shape) for i in range(len(out))]
+        for i in range(len(out[-1])):
+            memo[i] = self.loss.getGrad(out[-1], y, i)
 
-        for i in range(len(memo_activations)-1, 0, -1):
-            if(i == len(memo_activations)-1):
-                for j in range(len(memo_activations[i])):
-                    memo_activations[i][j] = self.loss.grad(out[-1], y, j) #correct
-            else:
-                for j in range(len(memo_activations[i])): #TODO; optimize this 
-                    memo_activations[i][j] = np.dot(memo_activations[i+1] * model.varsArr[i].activation.grad(out_noactivation[i+1]), model.varsArr[i].weights[j])
+        for i in range(len(model.varsArr)-1, -1, -1):
+            #print(i)
+            memo, param_grads[i] = model.varsArr[i].backprop(memo, out_noactivation[i], out[i], out_noactivation[i+1], out[i+1])
 
-        
-            for j in range(len(memo_activations[i-1])):
-                for k in range(len(memo_activations[i])):
-                    grad_weights[i-1][j][k] = memo_activations[i][k] * model.varsArr[i-1].activation.grad(out_noactivation[i][k]) * out[i-1][j]
-
-            for j in range(len(memo_activations[i])):
-                grad_biases[i-1][j] = memo_activations[i][j] * model.varsArr[i-1].activation.grad(out_noactivation[i][j])
-
-        return grad_weights, grad_biases
+        return param_grads
 

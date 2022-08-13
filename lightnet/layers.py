@@ -10,5 +10,59 @@ class Dense(core.FeedForward): #two completely connected layers; can be thought 
 
     def call(self, inlayer):
         #return self.activation.func(inlayer @ self.weights + self.biases), inlayer @ self.weights + self.biases
+
         return self.activation.func(np.dot(inlayer, self.weights)+self.biases), np.dot(inlayer, self.weights)+self.biases
+    
+    def backprop(self, memo_activations, z1, a1, z2, a2):
+        #memo_activations: backprop memoization
+        #z is output w/o activation function of next layer
+        #a is output from previous layer
+        new_memo = np.zeros((self.weights.shape[0]))
+        for j in range(len(new_memo)): 
+            new_memo[j] = np.dot(memo_activations * self.activation.grad(z2), self.weights[j])
+
+        grad_weights = np.zeros(self.weights.shape)
+        grad_biases = np.zeros(self.biases.shape)
+
+        for j in range(len(new_memo)):
+            for k in range(len(memo_activations)):
+                grad_weights[j][k] = memo_activations[k] * self.activation.grad(z2[k]) * a1[j]
+
+        for j in range(len(memo_activations)):
+            grad_biases[j] = memo_activations[j] * self.activation.grad(z2[j])
+        #returns: backprop memo array, gradients for this layer's weights
         
+        return new_memo, [grad_weights, grad_biases]
+
+    def apply_grads(self, grads, lr=0.1):
+        self.weights -= lr * grads[0]
+        self.biases -= lr * grads[1]
+
+class Conv2D(core.FeedForward):
+    def __init__(self, filters, activation):
+        super(Conv2D, self).__init__()
+        self.activation = activation
+        self.filters = filters
+        self.filter_shape = filters[0].shape
+
+    def call(self, inlayer): #CHANNELS LAST INPUT
+        print(self.filter_shape)
+        outlayer = np.zeros((inlayer.shape[0]-self.filter_shape[0], inlayer.shape[0]-self.filter_shape[1], len(self.filters)))
+        for newchannel in range(len(self.filters)):
+            for i in range(len(inlayer)-self.filter_shape[0]):
+                for j in range(len(inlayer[i])-self.filter_shape[1]):
+                    print(i, j)
+                    mult = self.filters[newchannel] * inlayer[i:i+self.filter_shape[0], j:j+self.filter_shape[1]]
+                    outlayer[i][j][newchannel] = np.sum(mult)
+
+        return self.activation.func(outlayer), outlayer
+
+    def backprop(self, memo_activations, z1, a1, z2, a2):
+        pass
+
+class Flatten(core.FeedForward):
+    def __init__(self):
+        super(Flatten, self).__init__()
+
+    def call(self, inlayer):
+        return np.
