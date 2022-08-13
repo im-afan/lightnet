@@ -65,4 +65,4 @@ class Flatten(core.FeedForward):
         super(Flatten, self).__init__()
 
     def call(self, inlayer):
-        return np.
+        return np.resize(inlayer, (inlayer.size()))
