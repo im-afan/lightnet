@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 class Activation:
     def __init__(self, func, grad):
@@ -18,6 +19,9 @@ class FeedForward:
     def apply_grads(self, grads):
         pass
 
+    def save_layer(self):
+        pass
+
 """
 class FeedForward: #two completely connected layers; can be thought of as a nn with 0 hidden layers
     def __init__(self, weights, biases, activation): #TODO: add more customization (for flatten layers, etc.)
@@ -31,9 +35,10 @@ class FeedForward: #two completely connected layers; can be thought of as a nn w
 """
 
 class Sequential: #links many FeedForwards into a completely connected ANN
-    def __init__(self, varsArr):
+    def __init__(self, varsArr, name="sequential"):
         self.varsArr = varsArr #weights, biases, that kind of stuff
         self.trainableArr = [False for i in range(len(varsArr))]
+        self.name = name
 
     def call(self, inlayer, training=False):
         ret = []
@@ -50,6 +55,14 @@ class Sequential: #links many FeedForwards into a completely connected ANN
             return inlayer
         else:
             return ret, ret_noactivation
+
+    def save(self):
+        path = self.name
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        for i in range(len(self.varsArr)):
+            self.varsArr[i].save_layer(path)
+
 
 class Loss: #includes both gradient and loss function
     def __init__(self, loss, grad):

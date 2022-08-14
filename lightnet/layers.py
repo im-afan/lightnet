@@ -2,11 +2,12 @@ from lightnet import core
 import numpy as np
 
 class Dense(core.FeedForward): #two completely connected layers; can be thought of as a nn with 0 hidden layers
-    def __init__(self, weights, biases, activation): #TODO: add more customization (for flatten layers, etc.)
+    def __init__(self, weights, biases, activation, name="dense"): #TODO: add more customization (for flatten layers, etc.)
         super(Dense, self).__init__()
         self.weights = weights #output layer shape is determined by weights
         self.biases = biases
         self.activation = activation #class activation
+        self.name = name
 
     def call(self, inlayer):
         #return self.activation.func(inlayer @ self.weights + self.biases), inlayer @ self.weights + self.biases
@@ -38,6 +39,13 @@ class Dense(core.FeedForward): #two completely connected layers; can be thought 
         self.weights -= lr * grads[0]
         self.biases -= lr * grads[1]
 
+    def save_layer(self, dir):
+        np.save(dir + "/" + self.name + "_weights", self.weights)
+        np.save(dir + "/" + self.name + "_biases", self.biases)
+        config_file = open(dir + "/" + self.name + "_config", "w")
+        config_file.write("dense") #only stores layer type for now
+        
+
 class Conv2D(core.FeedForward):
     def __init__(self, filters, activation):
         super(Conv2D, self).__init__()
@@ -57,12 +65,27 @@ class Conv2D(core.FeedForward):
 
         return self.activation.func(outlayer), outlayer
 
-    def backprop(self, memo_activations, z1, a1, z2, a2):
-        pass
+    def backprop(self, memo_activations, z1, a1, z2, a2): #TODO
+        grads = [np.zeros(self.filter_shape) for i in range(len(self.filters))]
+        newmemo = np.zeros(a1.shape)
+
+        for grad in range(len(grads)):
+            for i in range(len(newmemo)):
+                for j in range(len(newmemo[i])):
+                    pass
+
+
+
+    def apply_grads(self, grads): #grads: one for each filter
+        for i in range(len(self.filters)):
+            self.filters[i] -= grads[i]
 
 class Flatten(core.FeedForward):
     def __init__(self):
         super(Flatten, self).__init__()
 
+    def backprop(self, memo_activations, z1, a1, z2, a2):
+        return memo_activations.reshape(a1.shape)
+
     def call(self, inlayer):
-        return np.resize(inlayer, (inlayer.size()))
+        return inlayer.flatten()
