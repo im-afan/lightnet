@@ -1,6 +1,15 @@
 import numpy as np
 import os
 
+"""
+def load_layer(path, name):
+    #for i in range(len(name_list)):
+    layer_config = open("path/" + name + "_config", "r")
+    layer_type = layer_config.readline()
+    if(layer_type == "dense"):
+        weights = np.load("path/" + name + "_weights.npy")
+        biases = np.load("path/" + name + "_biases.npy")
+"""
 class Activation:
     def __init__(self, func, grad):
         self.func = func
@@ -62,8 +71,7 @@ class Sequential: #links many FeedForwards into a completely connected ANN
             os.makedirs(path)
         for i in range(len(self.varsArr)):
             self.varsArr[i].save_layer(path)
-
-
+            
 class Loss: #includes both gradient and loss function
     def __init__(self, loss, grad):
         self.loss = loss

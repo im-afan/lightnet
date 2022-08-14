@@ -1,5 +1,14 @@
-from lightnet import core
+from lightnet import core, activations
 import numpy as np
+
+def load_layer(path, name):
+    #for i in range(len(name_list)):
+    layer_config = open(path+"/" + name + "_config", "r")
+    layer_type = layer_config.readline()
+    if(layer_type == "dense"):
+        weights = np.load(path+"/" + name + "_weights.npy")
+        biases = np.load(path+"/" + name + "_biases.npy")
+        return Dense(weights, biases, activations.Linear())
 
 class Dense(core.FeedForward): #two completely connected layers; can be thought of as a nn with 0 hidden layers
     def __init__(self, weights, biases, activation, name="dense"): #TODO: add more customization (for flatten layers, etc.)
