@@ -27,9 +27,12 @@ class Dense(core.FeedForward): #two completely connected layers; can be thought 
         #memo_activations: backprop memoization
         #z is output w/o activation function of next layer
         #a is output from previous layer
-        new_memo = np.zeros((self.weights.shape[0]))
+        #new_memo = np.zeros((self.weights.shape[0]))
+        """
         for j in range(len(new_memo)): 
             new_memo[j] = np.dot(memo_activations * self.activation.grad(z2), self.weights[j])
+        """
+        new_memo = np.dot(memo_activations * self.activation.grad(z2), self.weights.T)
 
         grad_weights = np.zeros(self.weights.shape)
         grad_biases = np.zeros(self.biases.shape)
@@ -41,7 +44,7 @@ class Dense(core.FeedForward): #two completely connected layers; can be thought 
         for j in range(len(memo_activations)):
             grad_biases[j] = memo_activations[j] * self.activation.grad(z2[j])
         #returns: backprop memo array, gradients for this layer's weights
-        
+
         return new_memo, [grad_weights, grad_biases]
 
     def apply_grads(self, grads, lr=0.1):
