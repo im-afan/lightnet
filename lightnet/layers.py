@@ -36,13 +36,16 @@ class Dense(core.FeedForward): #two completely connected layers; can be thought 
 
         grad_weights = np.zeros(self.weights.shape)
         grad_biases = np.zeros(self.biases.shape)
-
+        """
         for j in range(len(new_memo)):
             for k in range(len(memo_activations)):
                 grad_weights[j][k] = memo_activations[k] * self.activation.grad(z2[k]) * a1[j]
 
         for j in range(len(memo_activations)):
             grad_biases[j] = memo_activations[j] * self.activation.grad(z2[j])
+        """
+        grad_weights = (memo_activations * self.activation.grad(z2)) * a1[:, np.newaxis] 
+        grad_biases = memo_activations * self.activation.grad(z2)
         #returns: backprop memo array, gradients for this layer's weights
 
         return new_memo, [grad_weights, grad_biases]
