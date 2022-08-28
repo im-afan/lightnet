@@ -1,6 +1,6 @@
 #TODO: add batch training
 #gradient calculators
-from lightnet import core, layers, activations, losses
+import core, layers, activations, losses
 import numpy as np
 
 #chain rule: dy/dx = dy/du * du/dx
@@ -29,4 +29,3 @@ class SchotasticGrad(core.AutoGrad):
             memo, param_grads[i] = model.varsArr[i].backprop(memo, out_noactivation[i], out[i], out_noactivation[i+1], out[i+1])
 
         return param_grads
-

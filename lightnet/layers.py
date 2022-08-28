@@ -1,4 +1,4 @@
-from lightnet import core, activations
+import core, activations
 import numpy as np
 
 def load_layer(path, name):
@@ -88,8 +88,6 @@ class Conv2D(core.FeedForward):
             for i in range(len(newmemo)):
                 for j in range(len(newmemo[i])):
                     pass
-
-
 
     def apply_grads(self, grads): #grads: one for each filter
         for i in range(len(self.filters)):

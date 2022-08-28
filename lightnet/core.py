@@ -106,8 +106,6 @@ class TrainSession: #optimizer
         self.loss = loss
         self.autograd = autograd #autograd calculates gradient step for each train step
 
-    def trainBatch(self, logits, labels):
-        for i in range(len(logits)):
-            logit = logits[i]
-            label = labels[i]
+    def trainStep(self):
+        pass
         

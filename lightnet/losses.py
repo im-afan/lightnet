@@ -1,4 +1,4 @@
-from lightnet import core
+import core
 import numpy as np
 
 class MSE(core.Loss):
